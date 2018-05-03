@@ -1,0 +1,87 @@
+<div class="post-detail" *ngIf="isRead">
+
+  <div class="row post-detail-overview">
+    <div class="card">
+      <img class="card-img-top" src="https://dummyimage.com/540x300/2b48ba/fff.png" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{ post?.name }}</h5>
+        <p class="card-text">{{ post?.postBody }}</p>
+      </div>
+      <ul class="list-group detail-group-flush">
+        <li class="list-group-item">{{ post?.author }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row post-buttons">
+    <button
+        type="button"
+        class="btn btn-secondary"
+        routerLink="/posts"
+    >
+      Zur&uuml;ck zur &Uuml;bersicht
+    </button>
+  </div>
+</div>
+
+<div class="post-edit" *ngIf="isEdit || isNew">
+
+  <div class="row post-edit-overview">
+    <div class="card">
+      <img class="card-img-top" src="https://dummyimage.com/540x300/2b48ba/fff.png" alt="Card image cap">
+      <div class="card-body">
+        <div class="form-group">
+          <label for="post-name">Titel</label>
+          <input
+              id="post-name"
+              class="form-control"
+              name="postName"
+              value="{{ forms.get('name').value }}"
+              type="text"
+              [formControl]="forms.get('name')"
+          />
+        </div>
+        <div class="form-group">
+          <label for="post-body">Inhalt</label>
+          <textarea
+              class="form-control"
+              id="post-body"
+              name="postBody"
+              type="textarea"
+              [formControl]="forms.get('postBody')"
+              rows="10"
+          ></textarea>
+        </div>
+      </div>
+      <ul class="list-group detail-group-flush">
+        <li class="list-group-item">{{ post?.author }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row post-buttons">
+    <button
+        type="button"
+        class="btn btn-secondary"
+        routerLink="/posts"
+    >
+      Zur&uuml;ck zur &Uuml;bersicht
+    </button>
+    <button *ngIf="isEdit"
+        type="button"
+        class="btn btn-secondary"
+        (click)="save()"
+        title="Save user"
+    >
+      Speichern
+    </button>
+    <button *ngIf="!isEdit"
+        type="button"
+        class="btn btn-secondary"
+        (click)="save()"
+        title="Save user"
+    >
+      Speichern
+    </button>
+  </div>
+</div>

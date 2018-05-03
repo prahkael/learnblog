@@ -1,0 +1,40 @@
+<div class="post-list">
+  <div class="row">
+    <div class="col-sm-6 col-lg-6 post-list-item" *ngFor="let post of posts$ | async;">
+      <div class="card">
+        <img class="card-img-top" src="https://dummyimage.com/540x300/2b48ba/fff.png" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{ post.name }}</h5>
+          <p class="card-text">{{ post.postBody }}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">{{ post.author }}</li>
+        </ul>
+        <div class="card-body">
+          <a class="card-link"
+            routerLink="/posts/{{ post._id }}"
+            [queryParams]="{ state: 'read'}"
+          >mehr Lesen</a>
+          <a *ngIf="isSignedIn" class="card-link"
+            routerLink="/posts/{{ post._id }}"
+            [queryParams]="{ state: 'edit'}"
+          >Bearbeiten</a>
+          <a *ngIf="isSignedIn" class="card-link"
+            (click)="deletePost(post._id)"
+          >L&ouml;schen</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row post-buttons" *ngIf="isSignedIn">
+  <button
+      type="button"
+      class="btn btn-secondary"
+      routerLink="/posts/new"
+      [queryParams]="{ state: 'new'}"
+  >
+    Neuen Eintrag erstellen
+  </button>
+</div>
