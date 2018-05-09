@@ -26,7 +26,7 @@ import { Router }            from '@angular/router';
  * @author Thomas Fuchs <thomas.fuchs@net-designer.net>
  */
 @Component({
-  selector     : 'post-list',
+  selector     : 'app-post-list',
   templateUrl  : 'post-list.component.html',
   styleUrls    : ['post-list.component.scss'],
 })
@@ -36,18 +36,8 @@ export class PostListComponent implements OnInit {
   // Public properties
   // ***************************************************************************
 
-  posts: any;
-
+  posts$: Observable<any>;
   auth: BehaviorSubject<boolean>;
-
-  /**
-   * Public property of the posts list subject. This subject is used in other
-   * views as observable to observe posts list changes.
-   *
-   * @type {Observable<Array<Post>>}
-   */
-  posts$: Observable<Array<Post>>;
-
   isSignedIn = false;
 
   // ***************************************************************************
@@ -55,17 +45,9 @@ export class PostListComponent implements OnInit {
   // ***************************************************************************
 
   // ***************************************************************************
-  // Static methods
+  // Constructor
   // ***************************************************************************
 
-  /**
-   * Constructor.
-   *
-   * @constructor
-   * @param  {PostService}        _postService singleton instance of the post Service
-   * @param  {UserService}        _userService singleton instance of the post Service
-   * @return {PostListComponent}  instance of the post list component
-   */
   constructor(
     private _postService: PostService,
     private _userService: UserService,
@@ -75,26 +57,21 @@ export class PostListComponent implements OnInit {
   // Public methods
   // ***************************************************************************
 
-  /**
-   * Public interface method to be fired after the component is initialized.
-   *
-   * @interface OnInit
-   */
   ngOnInit() {
-    this.posts$ = this._postService.readPosts();
+    this.posts$ = this._postService.getPostsAsObservable();
 
     this._userService.isSignedIn$.subscribe(isSignedIn => {
       this.isSignedIn = isSignedIn;
     });
   }
 
-  /**
-   * Method to delete one post by id.
-   *
-   * @param  {string} postId
-   */
+  // ***************************************************************************
+
   deletePost(postId: string) {
-    this._postService.deletePost(postId);
+    const isConfirmed = confirm('Wirklich?');
+    if (isConfirmed) {
+      this._postService.deletePost(postId);
+    }
   }
 
   // ***************************************************************************

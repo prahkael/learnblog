@@ -3,14 +3,16 @@
 // *****************************************************************************
 
 import { Injectable }           from '@angular/core';
+import { HttpClient }           from '@angular/common/http';
 
 import { BehaviorSubject }      from 'rxjs/BehaviorSubject';
 import { Subject }              from 'rxjs/Subject';
 import { distinctUntilChanged } from 'rxjs/operators';
+import 'rxjs/add/operator/map';
 
 import { createMockedPosts }    from './post-list.mock';
 
-import { Post, IPost }          from './post';
+import { Post }                 from './post';
 
 // *****************************************************************************
 // Service
@@ -40,20 +42,14 @@ export class PostService {
   // Private properties
   // ***************************************************************************
 
-  private _posts: any;
+  private _posts: Array<Post>;
 
   // ***************************************************************************
   // Static methods
   // ***************************************************************************
 
-  /**
-   * Constructor.
-   *
-   * @constructor
-   * @return {PostService}   instance of the post service
-   */
-  constructor() {
-    this._posts = createMockedPosts().map(post => new Post(post));
+  constructor(private http: HttpClient) {
+    // this._posts = createMockedPosts().map(post => new Post(post));
 
     // create subjects and initialize the posts subject with the local posts array
     this.posts$ = new BehaviorSubject(this._posts);
@@ -63,70 +59,64 @@ export class PostService {
   // Public methods
   // ***************************************************************************
 
-  /**
-   * Public method to create a new post in the post list.
-   *
-   * @param {IPost} objPost object of post data to create a new post
-   */
-  createPost(objPost: IPost) {
-    this._posts = [ ...this._posts, new Post(objPost) ];
-    this.posts$.next(this._posts);
-  }
-
-  // ***************************************************************************
-
-  /**
-   * Public method to read one post by a given id.
-   *
-   * @param  {string} id id of the post to be returned
-   * @return {Post}      post to be looked for
-   */
-  readPost(id: string): Post {
-    return this._posts.find((post: Post) => post._id === id);
-  }
-
-  // ***************************************************************************
-
-  /**
-   * Public method to read all posts in posts list as as observable.
-   *
-   * @return {Array}
-   */
-  // readPosts() {
-  //   return this._posts;
-  // }
-
-  /**
-   * Public method to read all posts in posts list as as observable.
-   *
-   * @return {Obserable<Array<Post>>} obserable of array of posts
-   */
-  readPosts() {
+  getPostsAsObservable() {
     return this.posts$.asObservable();
   }
 
   // ***************************************************************************
 
-  /**
-   * Public method to update one given post.
-   *
-   * @param {IPost} objPost     object of the post to be updated
-   * @param {IPost} objPost._id id of the post to be updated
-   */
-  updatePost(objPost: IPost) {
-    console.log(`>>> debug: objPost: `, objPost);
-    this._posts = this._posts.map(postCurr =>
-        objPost._id === postCurr._id ? { ...postCurr, ...objPost } : postCurr);
-    this.posts$.next(this._posts);
+  createPost(post: Post) {
+    this.http
+        .post('/api/posts', { data: { post } })
+        .map((data: any) => data.json())
+        .subscribe((objPostCreated: any) => {
+
+      this._posts.push(new Post(objPostCreated));
+      this.posts$.next(this._posts);
+    });
   }
 
-  /**
-   * Public method to delete one post by a given ID.
-   *
-   * @param {string} id id of the post to be deleted
-   */
+  // ***************************************************************************
+
+  readPost(id: string) {
+    return this._posts.find((post: Post) => post._id === id);
+  }
+
+  // ***************************************************************************
+
+  readPosts() {
+    return this.http
+        .get('/api/posts')
+        .map((data: any) => data.json())
+        .subscribe((postsRaw: Array<any>) => {
+
+      this._posts = postsRaw.map(objPost => new Post(objPost));
+      this.posts$.next(this._posts);
+    });
+  }
+
+  // ***************************************************************************
+
+  updatePost(post: Post) {
+    this.http.put('/api/posts/' + post._id, { data: { post } })
+        .map((data: any) => data.json())
+        .map((data: any) => data.post)
+        .subscribe((postRaw: any) => {
+          this._posts = [ ...this._posts.filter((postCurr: Post) =>
+              postCurr._id !== postRaw._id), postRaw ];
+          this.posts$.next(this._posts);
+        });
+  }
+
+  // ***************************************************************************
+
   deletePost(id: string) {
-    this._posts = this._posts.filter(post => post._id !== id);
-    this.posts$.next(this._posts);
+    this.http
+        .delete('/api/posts/' + id)
+        .subscribe(() => {
+          this._posts = [ ...this._posts.filter((postCurr: Post) =>
+              postCurr._id !== id) ];
+          this.posts$.next(this._posts);
+        });
   }
 }

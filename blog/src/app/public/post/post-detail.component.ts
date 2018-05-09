@@ -18,6 +18,7 @@ import { FormGroup }            from '@angular/forms';
 
 import { UserService }          from '../user/user.service';
 import { createMockedObjectId } from './post-list.mock';
+import { createMockedPost }     from './post-list.mock';
 import { PostService }          from './post.service';
 import { Post }                 from './post';
 
@@ -107,17 +108,17 @@ export class PostDetailComponent implements OnInit {
    * Component's constructor method.
    *
    * @constructor
-   * @param  {PostService}            _postService    injected post service
-   * @param  {UserService}            _userService    injected post service
-   * @param  {Router}                 _router         injected router
-   * @param  {ActivatedRoute}         _activatedRoute injected activated route
-   * @return {PostDetailComponent}                    post detail component instance
+   * @param  {PostService}          _postService    injected post service
+   * @param  {UserService}          _userService    injected post service
+   * @param  {Router}               _router         injected router
+   * @param  {ActivatedRoute}       _activatedRoute injected activated route
+   * @return {PostDetailComponent}                  post detail component instance
    */
   constructor(
-      private _postService     : PostService,
-      private _userService     : UserService,
-      private _router          : Router,
-      private _activatedRoute  : ActivatedRoute,
+      private _postService   : PostService,
+      private _userService   : UserService,
+      private _router        : Router,
+      private _activatedRoute: ActivatedRoute,
   ) {
     this.isNew      = false;
     this.isRead     = false;
@@ -156,39 +157,35 @@ export class PostDetailComponent implements OnInit {
       this._checkAdminRights();
 
       this.forms = new FormGroup({
-        name     : new FormControl(),
-        postBody : new FormControl()
+        title: new FormControl(),
+        body : new FormControl()
       });
 
       if (this.isEdit || this.isRead) {
         this._activatedRoute.params.subscribe(paramsId => {
           this._id  = paramsId.id;
         });
-        this.post = this._postService.readPost(this._id);
-
-        if (this.post) {
-          this.forms.get('name').setValue(this.post.name);
-          this.forms.get('postBody').setValue(this.post.postBody);
-        } else {
-          this._router.navigate(['posts', 'new']);
-        }
+        this._postService.readPost(this._id).subscribe(res => {
+          this.post = res.blog && res.blog[0] || new Post();
+          if (this.post) {
+            this.forms.get('title').setValue(this.post.title);
+            this.forms.get('body').setValue(this.post.body);
+          } else {
+            this._router.navigate(['posts', 'new']);
+          }
+        });
       }
 
       if (this.isNew) {
         this.post = new Post({
-          _id     : '',
-          name    : '',
-          postBody: '',
-          author  : ''
+          _id   : '',
+          title : '',
+          body  : '',
+          author: ''
         });
-        this._id         = createMockedObjectId();
         this.post._id    = this._id;
         this.post.author = 'It`s meeeeee';
       }
-
-      console.log(`>>> debug: this.isNew: `, this.isNew);
-      console.log(`>>> debug: this.isEdit: `, this.isEdit);
-      console.log(`>>> debug: this.isRead: `, this.isRead);
   }
 
   // ***************************************************************************
@@ -234,9 +231,9 @@ export class PostDetailComponent implements OnInit {
    * Method to save an existing or create a new post.
    */
   save() {
-    const post    = this.post;
-    post.name     = this.forms.get('name').value;
-    post.postBody = this.forms.get('postBody').value;
+    const post = this.post;
+    post.title = this.forms.get('title').value;
+    post.body = this.forms.get('body').value;
 
     if (this.isEdit) {
       post.author = this.post.author;
@@ -247,6 +244,17 @@ export class PostDetailComponent implements OnInit {
     }
 
     this._router.navigate(['posts']);
+  }
+
+  /**
+   * Create Mocked entries
+   * Called through click
+   */
+  createMock() {
+    const mockedBlog = createMockedPost();
+    this.forms.get('title').setValue(mockedBlog.name);
+    this.forms.get('body').setValue(mockedBlog.postBody);
+    this.post.author = mockedBlog.author;
   }
 
   // ***************************************************************************

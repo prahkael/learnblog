@@ -17,7 +17,6 @@ const routes: Routes = [
   { path: 'posts',     pathMatch: 'full', component: PostListComponent },
   { path: 'posts/new', pathMatch: 'full', component: PostDetailComponent },
   { path: 'posts/:id', pathMatch: 'full', component: PostDetailComponent },
-  { path: 'posts/:id', pathMatch: 'full', component: PostDetailComponent },
 ];
 
 // *****************************************************************************

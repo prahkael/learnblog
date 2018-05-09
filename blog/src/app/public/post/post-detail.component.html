@@ -4,8 +4,8 @@
     <div class="card">
       <img class="card-img-top" src="https://dummyimage.com/540x300/2b48ba/fff.png" alt="Card image cap">
       <div class="card-body">
-        <h5 class="card-title">{{ post?.name }}</h5>
-        <p class="card-text">{{ post?.postBody }}</p>
+        <h5 class="card-title">{{ post?.title }}</h5>
+        <p class="card-text">{{ post?.body }}</p>
       </div>
       <ul class="list-group detail-group-flush">
         <li class="list-group-item">{{ post?.author }}</li>
@@ -36,9 +36,9 @@
               id="post-name"
               class="form-control"
               name="postName"
-              value="{{ forms.get('name').value }}"
+              value="{{ forms.get('title').value }}"
               type="text"
-              [formControl]="forms.get('name')"
+              [formControl]="forms.get('title')"
           />
         </div>
         <div class="form-group">
@@ -46,9 +46,9 @@
           <textarea
               class="form-control"
               id="post-body"
-              name="postBody"
+              name="body"
               type="textarea"
-              [formControl]="forms.get('postBody')"
+              [formControl]="forms.get('body')"
               rows="10"
           ></textarea>
         </div>
@@ -82,6 +82,14 @@
         title="Save user"
     >
       Speichern
+    </button>
+    <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="createMock()"
+        title="create mock"
+    >
+      Eintrag generieren
     </button>
   </div>
 </div>
