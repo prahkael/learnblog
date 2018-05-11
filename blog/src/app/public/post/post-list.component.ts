@@ -59,6 +59,7 @@ export class PostListComponent implements OnInit {
 
   ngOnInit() {
     this.posts$ = this._postService.getPostsAsObservable();
+    this._postService.readPosts();
 
     this._userService.isSignedIn$.subscribe(isSignedIn => {
       this.isSignedIn = isSignedIn;

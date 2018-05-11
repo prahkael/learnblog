@@ -49,9 +49,7 @@ export class PostService {
   // ***************************************************************************
 
   constructor(private http: HttpClient) {
-    // this._posts = createMockedPosts().map(post => new Post(post));
-
-    // create subjects and initialize the posts subject with the local posts array
+    this.readPosts();
     this.posts$ = new BehaviorSubject(this._posts);
   }
 
@@ -68,7 +66,7 @@ export class PostService {
   createPost(post: Post) {
     this.http
         .post('/api/posts', { data: { post } })
-        .map((data: any) => data.json())
+        .map((result: any) => result.data && result.data.post)
         .subscribe((objPostCreated: any) => {
 
       this._posts.push(new Post(objPostCreated));
@@ -79,7 +77,10 @@ export class PostService {
   // ***************************************************************************
 
   readPost(id: string) {
-    return this._posts.find((post: Post) => post._id === id);
+    return this.http
+        .get('/api/posts/' + id)
+        .map((result: any) => result.data && result.data.post)
+        ;
   }
 
   // ***************************************************************************
@@ -87,7 +88,9 @@ export class PostService {
   readPosts() {
     return this.http
         .get('/api/posts')
-        .map((data: any) => data.json())
+        .map((result: any) => {
+          return result.data && result.data.posts;
+        })
         .subscribe((postsRaw: Array<any>) => {
 
       this._posts = postsRaw.map(objPost => new Post(objPost));
@@ -99,7 +102,7 @@ export class PostService {
 
   updatePost(post: Post) {
     this.http.put('/api/posts/' + post._id, { data: { post } })
-        .map((data: any) => data.json())
+        .map((data: any) => data.data)
         .map((data: any) => data.post)
         .subscribe((postRaw: any) => {
           this._posts = [ ...this._posts.filter((postCurr: Post) =>

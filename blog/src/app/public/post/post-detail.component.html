@@ -1,4 +1,4 @@
-<div class="post-detail" *ngIf="isRead">
+<div class="post-detail" *ngIf="_id && !isEdit">
 
   <div class="row post-detail-overview">
     <div class="card">
@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<div class="post-edit" *ngIf="isEdit || isNew">
+<div class="post-edit" *ngIf="isEdit || !isEdit && !_id">
 
   <div class="row post-edit-overview">
     <div class="card">
@@ -36,9 +36,9 @@
               id="post-name"
               class="form-control"
               name="postName"
-              value="{{ forms.get('title').value }}"
+              value="{{ formGroup.get('title').value }}"
               type="text"
-              [formControl]="forms.get('title')"
+              [formControl]="formGroup.get('title')"
           />
         </div>
         <div class="form-group">
@@ -48,7 +48,7 @@
               id="post-body"
               name="body"
               type="textarea"
-              [formControl]="forms.get('body')"
+              [formControl]="formGroup.get('body')"
               rows="10"
           ></textarea>
         </div>
@@ -83,7 +83,7 @@
     >
       Speichern
     </button>
-    <button
+    <button *ngIf="(isEdit || (!isEdit && !_id) && isSignedIn)"
         type="button"
         class="btn btn-secondary"
         (click)="createMock()"

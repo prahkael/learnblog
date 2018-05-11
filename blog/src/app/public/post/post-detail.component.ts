@@ -26,237 +26,103 @@ import { Post }                 from './post';
 // Class
 // *****************************************************************************
 
-/**
- * Class of the .
- *
- * @class
- * @author Thomas Fuchs <thomas.fuchs@net-designer.net>
- */
 @Component({
-  selector     : 'post-detail',
+  selector     : 'app-post-detail',
   templateUrl  : 'post-detail.component.html',
   styleUrls    : ['post-detail.component.scss'],
 })
 export class PostDetailComponent implements OnInit {
+
   // ***************************************************************************
   // Public properties
   // ***************************************************************************
 
-  /**
-   * the post object
-   * @return {Post}
-   */
-  post: Post;
-
-  /**
-   * Service to check if user is logged in
-   * @type {BehaviorSubject<boolean>}
-   */
+  post: any;
+  formGroup: FormGroup;
   auth: BehaviorSubject<boolean>;
-
-  /**
-   *
-   * @type {FormGroup}
-   */
-  forms: FormGroup;
-
-  /**
-   * The state of calling (edit, read, new)
-   * @type {string}
-   */
-  state: string;
-
-  /**
-   *
-   * @type {Boolean}
-   */
-  isRead: boolean;
-
-  /**
-   *
-   * @type {Boolean}
-   */
   isEdit: boolean;
-
-  /**
-   *
-   * @type {Boolean}
-   */
-  isNew : boolean;
-
-  /**
-   * Check if user is logged in
-   * @type {Boolean}
-   */
   isSignedIn: boolean;
 
   // ***************************************************************************
   // Private properties
   // ***************************************************************************
 
-  /**
-   * the id of the post
-   * @return {string}
-   */
   private _id: string;
 
   // ***************************************************************************
   // Static methods
   // ***************************************************************************
 
-  /**
-   * Component's constructor method.
-   *
-   * @constructor
-   * @param  {PostService}          _postService    injected post service
-   * @param  {UserService}          _userService    injected post service
-   * @param  {Router}               _router         injected router
-   * @param  {ActivatedRoute}       _activatedRoute injected activated route
-   * @return {PostDetailComponent}                  post detail component instance
-   */
   constructor(
       private _postService   : PostService,
       private _userService   : UserService,
       private _router        : Router,
       private _activatedRoute: ActivatedRoute,
   ) {
-    this.isNew      = false;
-    this.isRead     = false;
-    this.isEdit     = false;
-    this.isSignedIn = false;
+   this.formGroup = new FormGroup({
+     title: new FormControl(),
+     body : new FormControl()
+   });
+   this.post = {};
   }
 
   // ***************************************************************************
   // Public methods
   // ***************************************************************************
 
-  /**
-   * Public interface method to be fired after the component is initialized.
-   *
-   * @interface OnInit
-   */
-   ngOnInit() {
-     /*
-      * check if user logged in or not
-      */
-     this._userService.isSignedIn$.subscribe(isSignedIn => {
-       this.isSignedIn = isSignedIn;
-     });
+  ngOnInit() {
+    const id    = this._activatedRoute.snapshot.params.id;
+    const state = this._activatedRoute.snapshot.queryParams.state;
+    this.isEdit = false;
 
-     /*
-      * check if edit or not.
-      */
-     this._activatedRoute.queryParams
-      .filter(params => params.state)
-      .subscribe(params => {
-        if (!this._setState(params.state)) {
-          this._router.navigate(['posts']);
-        }
-      });
+    this._userService.isSignedIn$.subscribe(isSignedIn => {
+      this.isSignedIn = isSignedIn;
 
-      this._checkAdminRights();
+      if ((this.isEdit || state === 'new') && !isSignedIn) {
+        this._router.navigate(['posts']);
+      }
+    });
 
-      this.forms = new FormGroup({
-        title: new FormControl(),
-        body : new FormControl()
-      });
-
-      if (this.isEdit || this.isRead) {
-        this._activatedRoute.params.subscribe(paramsId => {
-          this._id  = paramsId.id;
-        });
-        this._postService.readPost(this._id).subscribe(res => {
-          this.post = res.blog && res.blog[0] || new Post();
-          if (this.post) {
-            this.forms.get('title').setValue(this.post.title);
-            this.forms.get('body').setValue(this.post.body);
-          } else {
-            this._router.navigate(['posts', 'new']);
+    if (id && state !== 'new') {
+      this.isEdit = true;
+      this._id    = id;
+      this._postService.readPost(id).subscribe((post: Post) => {
+        this.post = post;
+        this._activatedRoute.queryParams
+        .filter(params => params.state)
+        .subscribe(params => {
+          if (params && params.state && params.state === 'read') {
+            this.isEdit = false;
           }
         });
-      }
-
-      if (this.isNew) {
-        this.post = new Post({
-          _id   : '',
-          title : '',
-          body  : '',
-          author: ''
-        });
-        this.post._id    = this._id;
-        this.post.author = 'It`s meeeeee';
-      }
+        return this.formGroup.patchValue(post);
+      });
+    }
   }
 
   // ***************************************************************************
   // Private methods
   // ***************************************************************************
 
-  /**
-   * check if the user has Admin rights. If not, redirect to list.
-   */
-  private _checkAdminRights() {
-    // console.log(`>>> debug: (this.isNew || this.isEdit) && !this.isSignedIn: `, (this.isNew || this.isEdit) && !this.isSignedIn);
-    if ((this.isNew || this.isEdit) && !this.isSignedIn) {
-      this._router.navigate(['posts']);
-    }
-  }
-
-  // ***************************************************************************
-
-  /**
-   * Set the state.
-   * @param  {string} state
-   * @return {boolean}
-   */
-  private _setState(state: string) {
-    let stateIsValid = true;
-
-    if (state === 'new') {
-      this.isNew = true;
-    } else
-    if (state === 'edit') {
-      this.isEdit = true;
-    } else
-    if (state === 'read') {
-      this.isRead = true;
-    } else {
-      stateIsValid = false;
-    }
-
-    return stateIsValid;
-  }
-
-  /**
-   * Method to save an existing or create a new post.
-   */
   save() {
-    const post = this.post;
-    post.title = this.forms.get('title').value;
-    post.body = this.forms.get('body').value;
-
-    if (this.isEdit) {
-      post.author = this.post.author;
-      this._postService.updatePost(post);
-    } else
-    if (this.isNew) {
-      this._postService.createPost(post);
+    if (this.formGroup.invalid) {
+      return;
     }
 
+    const postToSave = { ...this.post, ...this.formGroup.value };
+    const methodName = this.isEdit ? 'updatePost' : 'createPost';
+    this._postService[methodName](postToSave);
     this._router.navigate(['posts']);
   }
 
-  /**
-   * Create Mocked entries
-   * Called through click
-   */
+  // ***************************************************************************
+
   createMock() {
     const mockedBlog = createMockedPost();
-    this.forms.get('title').setValue(mockedBlog.name);
-    this.forms.get('body').setValue(mockedBlog.postBody);
+    this.formGroup.get('title').setValue(mockedBlog.name);
+    this.formGroup.get('body').setValue(mockedBlog.postBody);
     this.post.author = mockedBlog.author;
   }
 
-  // ***************************************************************************
   // ***************************************************************************
 }
