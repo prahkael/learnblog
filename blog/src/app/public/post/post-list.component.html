@@ -5,23 +5,35 @@
         <img class="card-img-top" src="https://dummyimage.com/540x300/2b48ba/fff.png" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title">{{ post.title }}</h5>
-          <p class="card-text">{{ post.body }}</p>
+          <p class="card-text" [innerHTML]="post?.body | nl2br"></p>
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">{{ post.author }}</li>
         </ul>
         <div class="card-body">
-          <a class="card-link"
-            routerLink="/posts/{{ post._id }}"
-            [queryParams]="{ state: 'read'}"
-          >mehr Lesen</a>
-          <a *ngIf="isSignedIn" class="card-link"
-            routerLink="/posts/{{ post._id }}"
-            [queryParams]="{ state: 'edit'}"
-          >Bearbeiten</a>
-          <a *ngIf="isSignedIn" class="card-link"
-            (click)="deletePost(post._id)"
-          >L&ouml;schen</a>
+          <button
+              routerLink="/posts/{{ post._id }}"
+              [queryParams]="{ state: 'read'}"
+              type="button"
+              class="btn btn-primary"
+          >
+            mehr Lesen
+          </button>
+          <button *ngIf="isSignedIn"
+              routerLink="/posts/{{ post._id }}"
+              [queryParams]="{ state: 'edit'}"
+              type="button"
+              class="btn btn-warning"
+          >
+            Bearbeiten
+          </button>
+          <button *ngIf="isSignedIn"
+              (click)="deletePost(post._id)"
+              type="button"
+              class="btn btn-danger"
+          >
+            L&ouml;schen
+          </button>
         </div>
       </div>
     </div>
@@ -31,7 +43,7 @@
 <div class="row post-buttons" *ngIf="isSignedIn">
   <button
       type="button"
-      class="btn btn-secondary"
+      class="btn btn-primary"
       routerLink="/posts/new"
       [queryParams]="{ state: 'new'}"
   >

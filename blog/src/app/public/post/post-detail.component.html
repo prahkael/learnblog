@@ -5,7 +5,7 @@
       <img class="card-img-top" src="https://dummyimage.com/540x300/2b48ba/fff.png" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">{{ post?.title }}</h5>
-        <p class="card-text">{{ post?.body }}</p>
+        <p class="card-text" [innerHTML]="post?.body | nl2br"></p>
       </div>
       <ul class="list-group detail-group-flush">
         <li class="list-group-item">{{ post?.author }}</li>
@@ -16,7 +16,7 @@
   <div class="row post-buttons">
     <button
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-primary"
         routerLink="/posts"
     >
       Zur&uuml;ck zur &Uuml;bersicht
@@ -62,30 +62,30 @@
   <div class="row post-buttons">
     <button
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-primary"
         routerLink="/posts"
     >
-      Zur&uuml;ck zur &Uuml;bersicht
+      Zur&uuml;ck zur &Uuml;bersichtt
     </button>
     <button *ngIf="isEdit"
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-warning"
         (click)="save()"
-        title="Save user"
+        title="Save post"
     >
       Speichern
     </button>
     <button *ngIf="!isEdit"
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-warning"
         (click)="save()"
-        title="Save user"
+        title="Save post"
     >
       Speichern
     </button>
     <button *ngIf="(isEdit || (!isEdit && !_id) && isSignedIn)"
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-danger"
         (click)="createMock()"
         title="create mock"
     >

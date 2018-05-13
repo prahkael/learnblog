@@ -14,6 +14,8 @@ import { PostListComponent }      from './post-list.component';
 import { PostDetailComponent }    from './post-detail.component';
 import { PostService }            from './post.service';
 
+import { NewLineToBrPipe }        from '../../ui/pipes/nl2br.pipe';
+
 // *****************************************************************************
 // Locals
 // *****************************************************************************
@@ -29,6 +31,7 @@ const arrImports = [
 const arrDeclarations = [
   PostListComponent,
   PostDetailComponent,
+  NewLineToBrPipe,
 ];
 
 const arrProviders = [
