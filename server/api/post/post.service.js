@@ -59,8 +59,10 @@ function updatePost(id, post) {
 
     delete post._id;
     delete post.__v;
+    delete post.createdAt;
 
     Object.assign(postCurr, post);
+    console.log(postCurr);
     return postCurr.save();
   });
 }
