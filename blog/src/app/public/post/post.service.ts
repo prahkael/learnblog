@@ -85,9 +85,13 @@ export class PostService {
 
   // ***************************************************************************
 
-  readPosts() {
+  readPosts(sortKey?: string) {
+    if (!sortKey) {
+      sortKey = 'updatedAt';
+    }
+
     return this.http
-        .get('/api/posts')
+        .get('/api/posts?sort=' + sortKey)
         .map((result: any) => {
           return result.data && result.data.posts;
         })

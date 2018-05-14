@@ -36,8 +36,9 @@ function createPost(post) {
 
 // *****************************************************************************
 
-function readAll() {
-  return Post.find({});
+function readAll(sortObj) {
+  console.log(sortObj);
+  return Post.find({}, {}, sortObj);
 }
 
 // *****************************************************************************
@@ -62,7 +63,6 @@ function updatePost(id, post) {
     delete post.createdAt;
 
     Object.assign(postCurr, post);
-    console.log(postCurr);
     return postCurr.save();
   });
 }

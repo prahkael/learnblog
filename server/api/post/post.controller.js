@@ -47,11 +47,16 @@ function getPostById(req, res, next) {
 // *****************************************************************************
 
 function readAllPosts(req, res, next) {
-  console.log('readAllPosts');
+  const sortKey = req.query.sort;
+  let   sortObj = {};
+
+  if (sortKey) {
+    sortObj = {sort: sortKey};
+  }
+
   PostService
-      .readAll()
+      .readAll(sortObj)
       .then(posts => {
-        console.log(posts);
         return res.status(200).json({ data: { posts } });
       })
       .catch(err => next(err))

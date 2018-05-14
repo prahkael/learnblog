@@ -14,3 +14,33 @@
 .post-buttons button {
   margin-right: 5px;
 }
+
+table.table tr th.tblist-author {
+  width: 160px;
+}
+table.table tr th.tblist-title {
+  width: 160px;
+}
+table.table tr th.tblist-date {
+  width: 160px;
+}
+table.table tr th.tblist-action {
+  width: 160px;
+}
+
+.post-list .cp {
+  cursor: pointer;
+}
+
+.post-list .switch-overview {
+  padding-bottom: 20px;
+}
+
+.switch-overview span {
+  padding: 1px;
+  padding-left: 2px;
+}
+
+.switch-overview .active {
+  border: 2px solid black;
+}

@@ -38,7 +38,9 @@ export class PostListComponent implements OnInit {
 
   posts$: Observable<any>;
   auth: BehaviorSubject<boolean>;
-  isSignedIn = false;
+  isSignedIn    = false;
+  showTableView = true;
+  sortKey       = 'updatedAt';
 
   // ***************************************************************************
   // Private properties
@@ -59,7 +61,6 @@ export class PostListComponent implements OnInit {
 
   ngOnInit() {
     this.posts$ = this._postService.getPostsAsObservable();
-    this._postService.readPosts();
 
     this._userService.isSignedIn$.subscribe(isSignedIn => {
       this.isSignedIn = isSignedIn;
@@ -73,6 +74,24 @@ export class PostListComponent implements OnInit {
     if (isConfirmed) {
       this._postService.deletePost(postId);
     }
+  }
+
+  // ***************************************************************************
+
+  switchTableView(val: boolean) {
+    if (val) {
+      this.showTableView = true;
+    } else {
+      this.showTableView = false;
+    }
+  }
+
+  // ***************************************************************************
+
+  sort(sortKey: string) {
+    const minusKey = '-' + sortKey;
+    this.sortKey   = this.sortKey === sortKey ? minusKey : sortKey;
+    this._postService.readPosts(this.sortKey);
   }
 
   // ***************************************************************************

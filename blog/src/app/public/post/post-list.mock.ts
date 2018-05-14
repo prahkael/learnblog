@@ -25,7 +25,7 @@ export function createMockedPosts() {
 
 export function createMockedPost() {
   const arrPostName = ['somePostNameOne', 'somePostNameTwo', 'somePostNameThree'];
-  const arrAuthor   = ['someAuthroOne', 'someAuthorTwo', 'someAuthorThree'];
+  const arrAuthor   = ['someAuthorOne', 'someAuthorTwo', 'someAuthorThree'];
   const arrPostBody = [
     'Minions ipsum hana dul sae gelatooo uuuhhh para tú butt.'
     + 'Chasy belloo! Tulaliloo poulet tikka masala underweaaar baboiii tatata bala tu bappleees.'
