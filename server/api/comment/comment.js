@@ -2,8 +2,7 @@
 // Imports
 // *****************************************************************************
 
-const mongoose      = require('mongoose');
-const commentSchema = require('../comment/comment').commentSchema;
+const mongoose = require('mongoose');
 
 // *****************************************************************************
 // Locals
@@ -15,14 +14,14 @@ const Schema = mongoose.Schema;
 // Schema
 // *****************************************************************************
 
-const postSchema = new Schema({
-  title    : {type: String, required: true},
-  author   : {type: String, required: true},
-  body     : {type: String, required: true},
-  comments : [commentSchema]
+const commentSchema = new Schema({
+  title  : {type: String, required: true},
+  user   : {type: String, required: true},
+  comment: {type: String, required: true}
 },
 {
   timestamps: true
 });
 
-module.exports = mongoose.model('Post', postSchema, 'posts');
+module.exports.commentSchema = commentSchema;
+module.exports.commentModel  = mongoose.model('Comment', commentSchema);

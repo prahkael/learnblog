@@ -2,12 +2,13 @@
 // Imports
 // *****************************************************************************
 
-var createError = require('http-errors');
-var express     = require('express');
-var path        = require('path');
-var logger      = require('morgan');
+var createError   = require('http-errors');
+var express       = require('express');
+var path          = require('path');
+var logger        = require('morgan');
 
-var postRoutes  = require('./api/post/post.routes');
+var postRoutes    = require('./api/post/post.routes');
+var commentRoutes = require('./api/comment/comment.routes');
 
 var connectDatabase = require('./database');
 
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 connectDatabase();
 
 app.use('/api', postRoutes);
+app.use('/api', commentRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

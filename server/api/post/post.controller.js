@@ -8,11 +8,11 @@ var PostService = require('./post.service');
 // Exports
 // *****************************************************************************
 
-module.exports.createPost = createPost;
-module.exports.getPostById = getPostById;
-module.exports.readAllPosts = readAllPosts;
-module.exports.updatePostById = updatePostById;
-module.exports.deleteById = deleteById;
+module.exports.createPost        = createPost;
+module.exports.getPostById       = getPostById;
+module.exports.getAllPosts      = getAllPosts;
+module.exports.updatePostById    = updatePostById;
+module.exports.deleteById        = deleteById;
 
 // *****************************************************************************
 // Controller
@@ -38,7 +38,7 @@ function getPostById(req, res, next) {
   const _id = req.params.id;
 
   PostService
-      .readPost({ _id })
+      .getPost({ _id })
       .then(post => res.status(200).json({ data: { post } }))
       .catch(err => next(err))
       ;
@@ -46,7 +46,7 @@ function getPostById(req, res, next) {
 
 // *****************************************************************************
 
-function readAllPosts(req, res, next) {
+function getAllPosts(req, res, next) {
   const sortKey = req.query.sort;
   let   sortObj = {};
 
@@ -55,7 +55,7 @@ function readAllPosts(req, res, next) {
   }
 
   PostService
-      .readAll(sortObj)
+      .getAll(sortObj)
       .then(posts => {
         return res.status(200).json({ data: { posts } });
       })
@@ -90,5 +90,3 @@ function deleteById(req, res, next) {
       .then(isDeleted => res.status(200).json({ data: { isDeleted } }))
       .catch(err => next(err));
 }
-
-// *****************************************************************************

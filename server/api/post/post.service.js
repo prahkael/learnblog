@@ -8,9 +8,9 @@ var Post = require('./post');
 // Exports
 // *****************************************************************************
 
-module.exports.readPost   = readPost;
+module.exports.getPost   = getPost;
 module.exports.createPost = createPost;
-module.exports.readAll    = readAll;
+module.exports.getAll    = getAll;
 module.exports.updatePost = updatePost;
 module.exports.deletePost = deletePost;
 
@@ -18,7 +18,7 @@ module.exports.deletePost = deletePost;
 // Locals
 // *****************************************************************************
 
-function readPost(query = {}) {
+function getPost(query = {}) {
   return Post.findOne(query);
 }
 
@@ -36,8 +36,7 @@ function createPost(post) {
 
 // *****************************************************************************
 
-function readAll(sortObj) {
-  console.log(sortObj);
+function getAll(sortObj) {
   return Post.find({}, {}, sortObj);
 }
 
@@ -60,7 +59,6 @@ function updatePost(id, post) {
 
     delete post._id;
     delete post.__v;
-    delete post.createdAt;
 
     Object.assign(postCurr, post);
     return postCurr.save();
