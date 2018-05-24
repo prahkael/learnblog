@@ -30,8 +30,8 @@
         <a class="nav-link"
           (click)="changeAuth()"
         >
-          <span *ngIf="userAuth">Ausloggen</span>
-          <span *ngIf="!userAuth">Einloggen</span>
+          <span *ngIf="hasAuth">Ausloggen</span>
+          <span *ngIf="!hasAuth">Einloggen</span>
         </a>
       </li>
     </ul>

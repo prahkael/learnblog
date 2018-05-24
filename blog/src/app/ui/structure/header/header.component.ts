@@ -16,7 +16,7 @@ import { AuthService } from '../../../public/auth/auth.service';
  * @author Marco Schaule <marco.schaule@net-designer.net>
  */
 @Component({
-  selector     : 'ui-header',
+  selector     : 'app-ui-header',
   templateUrl  : 'header.component.html',
   styleUrls    : ['header.component.scss'],
 })

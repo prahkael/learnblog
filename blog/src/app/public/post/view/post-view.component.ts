@@ -25,6 +25,7 @@ import 'rxjs/add/operator/filter';
 // *****************************************************************************
 
 import { PostPublicService } from '../post-public.service';
+import { AuthService }       from '../../auth/auth.service';
 import { Post }              from '../post';
 
 // *****************************************************************************
@@ -58,6 +59,7 @@ export class PostViewComponent implements OnInit {
 
   constructor(
     private _postService: PostPublicService,
+    private _authService: AuthService,
     private _router     : Router,
     private _activatedRoute: ActivatedRoute) {
       this.formGroupComment = new FormGroup({
@@ -74,6 +76,11 @@ export class PostViewComponent implements OnInit {
   ngOnInit() {
     this.posts$ = this._postService.getPostsAsObservable();
     this._id    = this._activatedRoute.snapshot.params.id;
+    // const state = this._activatedRoute.snapshot.queryParams.state;
+
+    this._authService.isSignedIn$.subscribe(isSignedIn => {
+      this.isSignedIn = isSignedIn;
+    });
 
     this.posts$.subscribe(posts => {
       if (!posts) { return null; }
