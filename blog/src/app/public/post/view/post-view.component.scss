@@ -1,4 +1,4 @@
-.post-detail {
+.post-view {
   width: 100%;
 
   .card {
@@ -15,19 +15,10 @@
   }
 }
 
-.post-edit {
+.post-comments {
   width: 100%;
+}
 
-  .card {
-    width: 100%;
-  }
-
-  .post-buttons {
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .post-buttons button {
-    margin-right: 5px;
-  }
+.post-comments > div.card {
+  margin-top: 20px;
 }

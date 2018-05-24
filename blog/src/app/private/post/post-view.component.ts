@@ -3,67 +3,42 @@
 // *****************************************************************************
 
 import { Component } from '@angular/core';
-import { AuthService } from '../../../public/auth/auth.service';
+import { Input }     from '@angular/core';
+
+import { Post }      from '../../public/post/post';
 
 // *****************************************************************************
 // Class
 // *****************************************************************************
 
-/**
- * Class of the .
- *
- * @class
- * @author Marco Schaule <marco.schaule@net-designer.net>
- */
 @Component({
-  selector     : 'ui-header',
-  templateUrl  : 'header.component.html',
-  styleUrls    : ['header.component.scss'],
+  selector     : 'app-post-view',
+  templateUrl  : 'post-view.component.html',
+  styleUrls    : ['post-view.component.scss'],
 })
-export class HeaderComponent {
+export class PostViewComponent {
   // ***************************************************************************
   // Public properties
   // ***************************************************************************
 
-  hasAuth: boolean;
+  @Input()
+  body  : Post;
 
   // ***************************************************************************
   // Private properties
   // ***************************************************************************
 
   // ***************************************************************************
-  // Static methods
+  // Consturctor
   // ***************************************************************************
-
-  /**
-   * Constructor.
-   *
-   * @constructor
-   * @param  {AuthService}       _userService singleton instance of the user Service
-   * @return {HeaderComponent}                instance of the header component
-   */
-  constructor(private _authService: AuthService) {
-    this.hasAuth = this._authService.isSignedIn;
-  }
 
   // ***************************************************************************
   // Public methods
   // ***************************************************************************
 
-  public changeAuth() {
-    if (this._authService.isSignedIn) {
-      this._authService.signOut();
-      this.hasAuth = false;
-    } else {
-      this._authService.signIn();
-      this.hasAuth = true;
-    }
-  }
-
   // ***************************************************************************
   // Private methods
   // ***************************************************************************
-
   // ***************************************************************************
   // ***************************************************************************
 }

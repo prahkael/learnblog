@@ -2,17 +2,11 @@
 // Imports
 // *****************************************************************************
 
-import { CommonModule }    from '@angular/common';
-import { NgModule }        from '@angular/core';
-import { RouterModule }    from '@angular/router';
+import { CommonModule }   from '@angular/common';
+import { FormsModule }    from '@angular/forms';
+import { NgModule }       from '@angular/core';
 
-// *****************************************************************************
-
-import { HeaderComponent } from './structure/header/header.component';
-
-// *****************************************************************************
-
-// import { NewLineToBrPipe } from './pipes/nl2br.pipe';
+import { PostViewComponent } from './post/post-view.component';
 
 // *****************************************************************************
 // Locals
@@ -20,17 +14,13 @@ import { HeaderComponent } from './structure/header/header.component';
 
 const arrImports: any[] = [
   CommonModule,
-  RouterModule,
+  FormsModule,
 ];
-
 const arrDeclarations = [
-  HeaderComponent,
-  // NewLineToBrPipe,
+  PostViewComponent,
 ];
-
 const arrProviders: any[] = [
 ];
-
 const arrExports: any[] = arrDeclarations;
 
 // *****************************************************************************
@@ -43,5 +33,5 @@ const arrExports: any[] = arrDeclarations;
   declarations: arrDeclarations,
   providers   : arrProviders,
 })
-export class UiModule {}
+export class PrivateModule {}
 // *****************************************************************************

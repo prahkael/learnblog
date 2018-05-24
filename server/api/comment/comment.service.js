@@ -143,14 +143,19 @@ function createCommentByPostId(_id, comment) {
         message: 'Post create comment is required but missing!' });
   }
 
-  return Post.findById(_id, function(err, post) {
-    if (post.comments) {
-      post.comments.push(comment);
-      post.markModified('comments');
-      return post.save();
-    } else {
-      return Promise.reject({ kind: 'required', field: 'id',
-          message: 'Post id not found!' });
-    }
-  });
+  // Kurzschreibweise findOneAndUpdate(_id, ...) funktioniert nicht
+  return Post.findOneAndUpdate({"_id": _id},
+     { '$push': { 'comments': comment } },
+     { "new": true, "upsert": true });
+
+  // return Post.findById(_id, function(err, post) {
+  //   if (post.comments) {
+  //     post.comments.push(comment);
+  //     post.markModified('comments');
+  //     return post.save();
+  //   } else {
+  //     return Promise.reject({ kind: 'required', field: 'id',
+  //         message: 'Post id not found!' });
+  //   }
+  // });
 }

@@ -37,11 +37,13 @@ export class PostDetailComponent implements OnInit {
   // Public properties
   // ***************************************************************************
 
-  post: any;
-  formGroup: FormGroup;
-  auth: BehaviorSubject<boolean>;
-  isEdit: boolean;
-  isSignedIn: boolean;
+  posts$          : Observable<any>;
+  post            : any;
+  formGroup       : FormGroup;
+  formGroupComment: FormGroup;
+  auth            : BehaviorSubject<boolean>;
+  isEdit          : boolean;
+  isSignedIn      : boolean;
 
   // ***************************************************************************
   // Private properties
@@ -63,6 +65,11 @@ export class PostDetailComponent implements OnInit {
      title: new FormControl(),
      body : new FormControl()
    });
+   this.formGroupComment = new FormGroup({
+     user   : new FormControl(),
+     comment: new FormControl(),
+     title  : new FormControl(),
+   });
    this.post = {};
   }
 
@@ -71,6 +78,7 @@ export class PostDetailComponent implements OnInit {
   // ***************************************************************************
 
   ngOnInit() {
+    this.posts$ = this._postService.getPostsAsObservable();
     const id    = this._activatedRoute.snapshot.params.id;
     const state = this._activatedRoute.snapshot.queryParams.state;
     this.isEdit = false;
@@ -86,22 +94,27 @@ export class PostDetailComponent implements OnInit {
     if (id && state !== 'new') {
       this.isEdit = true;
       this._id    = id;
-      this._postService.readPost(id).subscribe((post: Post) => {
-        this.post = post;
-        this._activatedRoute.queryParams
-        .filter(params => params.state)
-        .subscribe(params => {
-          if (params && params.state && params.state === 'read') {
-            this.isEdit = false;
-          }
-        });
-        return this.formGroup.patchValue(post);
+      this.posts$.subscribe(posts => {
+        if (!posts) {
+          return null;
+        }
+
+        const currPost = posts.find(post => post._id === this._id);
+        if (currPost) {
+          this.post = currPost;
+          return this.formGroup.patchValue(this.post);
+        }
+      });
+      this._activatedRoute.queryParams
+          .filter(params => params.state)
+          .subscribe(params => {
+            if (params && params.state && params.state === 'read') {
+              this.isEdit = false;
+            }
       });
     }
   }
 
-  // ***************************************************************************
-  // Private methods
   // ***************************************************************************
 
   save() {
@@ -117,12 +130,28 @@ export class PostDetailComponent implements OnInit {
 
   // ***************************************************************************
 
+  saveComment() {
+    if (this.formGroup.invalid) {
+      return;
+    }
+
+    const commentToSave = {...this.formGroupComment.value};
+
+    this._postService.createComment(this._id, commentToSave);
+  }
+
+  // ***************************************************************************
+
   createMock() {
     const mockedBlog = createMockedPost();
+    this.post.author = mockedBlog.author;
     this.formGroup.get('title').setValue(mockedBlog.name);
     this.formGroup.get('body').setValue(mockedBlog.postBody);
-    this.post.author = mockedBlog.author;
   }
+
+  // ***************************************************************************
+  // Private methods
+  // ***************************************************************************
 
   // ***************************************************************************
 }

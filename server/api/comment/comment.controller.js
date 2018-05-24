@@ -104,7 +104,7 @@ function createComment(req, res, next) {
 
   const _id     = req.params.id;
   const comment = req.body.data.comment;
-
+  
   CommentService
       .createCommentByPostId(_id, comment)
       .then(post => res.status(200).json({ data: { post } }))

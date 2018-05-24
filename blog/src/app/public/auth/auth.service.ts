@@ -2,63 +2,52 @@
 // Imports
 // *****************************************************************************
 
-import { Component } from '@angular/core';
-import { AuthService } from '../../../public/auth/auth.service';
+import { Injectable }           from '@angular/core';
+
+// *****************************************************************************
+
+import { BehaviorSubject }      from 'rxjs/BehaviorSubject';
+import { Subject }              from 'rxjs/Subject';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 // *****************************************************************************
 // Class
 // *****************************************************************************
 
-/**
- * Class of the .
- *
- * @class
- * @author Marco Schaule <marco.schaule@net-designer.net>
- */
-@Component({
-  selector     : 'ui-header',
-  templateUrl  : 'header.component.html',
-  styleUrls    : ['header.component.scss'],
-})
-export class HeaderComponent {
+@Injectable()
+export class AuthService {
   // ***************************************************************************
   // Public properties
   // ***************************************************************************
 
-  hasAuth: boolean;
+  isSignedIn: boolean                   = false;
+  isSignedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.isSignedIn);
 
   // ***************************************************************************
   // Private properties
   // ***************************************************************************
 
   // ***************************************************************************
-  // Static methods
-  // ***************************************************************************
-
-  /**
-   * Constructor.
-   *
-   * @constructor
-   * @param  {AuthService}       _userService singleton instance of the user Service
-   * @return {HeaderComponent}                instance of the header component
-   */
-  constructor(private _authService: AuthService) {
-    this.hasAuth = this._authService.isSignedIn;
-  }
-
-  // ***************************************************************************
   // Public methods
   // ***************************************************************************
 
-  public changeAuth() {
-    if (this._authService.isSignedIn) {
-      this._authService.signOut();
-      this.hasAuth = false;
-    } else {
-      this._authService.signIn();
-      this.hasAuth = true;
-    }
+  constructor() {}
+
+  // ***************************************************************************
+
+  signIn() {
+    this.isSignedIn = true;
+    this.isSignedIn$.next(this.isSignedIn);
   }
+
+  // ***************************************************************************
+
+  signOut() {
+    this.isSignedIn = false;
+    this.isSignedIn$.next(this.isSignedIn);
+  }
+
+  // ***************************************************************************
 
   // ***************************************************************************
   // Private methods

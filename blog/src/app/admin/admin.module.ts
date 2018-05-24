@@ -8,57 +8,50 @@ import { ReactiveFormsModule }    from '@angular/forms';
 import { RouterModule }           from '@angular/router';
 import { HttpClientModule }       from '@angular/common/http';
 
-import { PostRoutingModule }      from './post-routing.module';
+// *****************************************************************************
 
-import { PostListComponent }      from './post-list.component';
-import { PostDetailComponent }    from './post-detail.component';
-import { PostService }            from './post.service';
+import { PostTableListComponent } from './post/table-list/post-table-list.component';
+import { PostManageComponent }    from './post/manage/post-manage.component';
 
-import { NewLineToBrPipe }        from '../../ui/pipes/nl2br.pipe';
+// *****************************************************************************
+
+import { PostAdminService }       from './post/post-admin.service';
+import { PostPublicService }      from '../public/post/post-public.service';
+
+// *****************************************************************************
+
+import { AdminRoutingModule }     from './admin-routing.module';
 
 // *****************************************************************************
 // Locals
 // *****************************************************************************
 
-const arrImports = [
+const arrImports: any[] = [
   CommonModule,
   ReactiveFormsModule,
-  PostRoutingModule,
   RouterModule,
   HttpClientModule,
+  AdminRoutingModule,
 ];
-
 const arrDeclarations = [
-  PostListComponent,
-  PostDetailComponent,
-  NewLineToBrPipe,
+  PostTableListComponent,
+  PostManageComponent,
 ];
-
-const arrProviders = [
-  PostService,
+const arrProviders: any[] = [
+  PostPublicService,
+  PostAdminService
 ];
-
-const arrExports = [
-  PostListComponent,
-  PostDetailComponent,
-];
+const arrExports: any[] = arrDeclarations;
 
 // *****************************************************************************
 // Class
 // *****************************************************************************
 
-/**
- * Module of the blog module.
- *
- * @class
- * @author Thomas Fuchs <thomas.fuchs@net-designer.net>
- */
 @NgModule({
   imports     : arrImports,
   exports     : arrExports,
   declarations: arrDeclarations,
   providers   : arrProviders,
 })
-export class PostModule {}
-
+export class AdminModule {}
 // *****************************************************************************

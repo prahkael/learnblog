@@ -48,7 +48,7 @@ export class PostService {
   // Static methods
   // ***************************************************************************
 
-  constructor(private http: HttpClient) {
+  constructor(private _httpClient: HttpClient) {
     this.readPosts();
     this.posts$ = new BehaviorSubject(this._posts);
   }
@@ -64,7 +64,7 @@ export class PostService {
   // ***************************************************************************
 
   createPost(post: Post) {
-    this.http
+    this._httpClient
         .post('/api/posts', { data: { post } })
         .map((result: any) => result.data && result.data.post)
         .subscribe((objPostCreated: any) => {
@@ -77,7 +77,7 @@ export class PostService {
   // ***************************************************************************
 
   readPost(id: string) {
-    return this.http
+    return this._httpClient
         .get('/api/posts/' + id)
         .map((result: any) => result.data && result.data.post)
         ;
@@ -90,7 +90,7 @@ export class PostService {
       sortKey = 'updatedAt';
     }
 
-    return this.http
+    return this._httpClient
         .get('/api/posts?sort=' + sortKey)
         .map((result: any) => {
           return result.data && result.data.posts;
@@ -105,7 +105,7 @@ export class PostService {
   // ***************************************************************************
 
   updatePost(post: Post) {
-    this.http.put('/api/posts/' + post._id, { data: { post } })
+    this._httpClient.put('/api/posts/' + post._id, { data: { post } })
         .map((data: any) => data.data)
         .map((data: any) => data.post)
         .subscribe((postRaw: any) => {
@@ -118,11 +118,25 @@ export class PostService {
   // ***************************************************************************
 
   deletePost(id: string) {
-    this.http
+    this._httpClient
         .delete('/api/posts/' + id)
         .subscribe(() => {
           this._posts = [ ...this._posts.filter((postCurr: Post) =>
               postCurr._id !== id) ];
+          this.posts$.next(this._posts);
+        });
+  }
+
+  // ***************************************************************************
+
+  createComment(id, comment) {
+    this._httpClient
+        .put('/api/posts/' + id + '/comments', { data: { comment } })
+        .map((data: any) => data.data)
+        .map((data: any) => data.post)
+        .subscribe((postRaw: any) => {
+          this._posts = [ ...this._posts.filter((postCurr: Post) =>
+              postCurr._id !== postRaw._id), postRaw ];
           this.posts$.next(this._posts);
         });
   }

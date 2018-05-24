@@ -1,29 +1,45 @@
+// *****************************************************************************
+// Imports
+// *****************************************************************************
+
 import { BrowserModule }    from '@angular/platform-browser';
 import { NgModule }         from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { PostModule }       from './public/post/post.module';
-import { WelcomeModule }    from './public/welcome/welcome.module';
-import { UiModule }         from './ui/ui.module';
+// *****************************************************************************
 
-import { UserService }      from './public/user/user.service';
+import { AppRoutingModule } from './app-routing.module';
+
+// *****************************************************************************
+
+import { PublicModule }     from './public/public.module';
+import { UiModule }         from './ui/ui.module';
+import { AdminModule }      from './admin/admin.module';
+
+// *****************************************************************************
+
+import { AuthService }      from './public/auth/auth.service';
+
+// *****************************************************************************
 
 import { AppComponent }     from './app.component';
 
+// *****************************************************************************
+// Class
+// *****************************************************************************
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     UiModule,
-    PostModule,
-    WelcomeModule,
+    AdminModule,
+    PublicModule,
     AppRoutingModule,
   ],
   providers: [
-    UserService
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

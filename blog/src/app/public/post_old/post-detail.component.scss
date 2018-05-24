@@ -1,0 +1,41 @@
+.post-detail {
+  width: 100%;
+
+  .card {
+    width: 100%;
+  }
+
+  .post-buttons {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .post-buttons button {
+    margin-right: 5px;
+  }
+}
+
+.post-comments {
+  width: 100%;
+}
+
+.post-comments > div.card {
+  margin-top: 20px;
+}
+
+.post-edit {
+  width: 100%;
+
+  .card {
+    width: 100%;
+  }
+
+  .post-buttons {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .post-buttons button {
+    margin-right: 5px;
+  }
+}
