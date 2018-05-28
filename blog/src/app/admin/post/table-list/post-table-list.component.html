@@ -43,12 +43,12 @@
               aria-hidden="true"
               routerLink="/posts/{{ post._id }}"
           ></span>
-          <span *ngIf="isSignedIn"
+          <span
               class="glyphicon glyphicon-pencil cp"
               aria-hidden="true"
               routerLink="/admin/posts/{{ post._id }}"
           ></span>
-          <span *ngIf="isSignedIn"
+          <span
               class="glyphicon glyphicon-remove cp"
               aria-hidden="true"
               (click)="deletePost(post._id)"
@@ -57,4 +57,14 @@
       </tr>
     </tbody>
   </table>
+
+  <div class="row post-buttons">
+    <button
+        type="button"
+        class="btn btn-primary"
+        routerLink="/admin/posts/new"
+    >
+      Neuen Eintrag erstellen
+    </button>
+  </div>
 </div>

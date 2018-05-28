@@ -1,1 +1,68 @@
-manage
+<div class="post-manage">
+  <div class="row post-edit-overview">
+      <div class="card">
+        <img class="card-img-top" src="https://dummyimage.com/540x300/2b48ba/fff.png" alt="Card image cap">
+        <div class="card-body">
+          <div class="form-group">
+            <label for="post-name">Titel</label>
+            <input
+                id="post-name"
+                class="form-control"
+                name="postName"
+                value="{{ formGroup.get('title').value }}"
+                type="text"
+                [formControl]="formGroup.get('title')"
+            />
+          </div>
+          <div class="form-group">
+            <label for="post-body">Inhalt</label>
+            <textarea
+                class="form-control"
+                id="post-body"
+                name="body"
+                type="textarea"
+                [formControl]="formGroup.get('body')"
+                rows="10"
+            ></textarea>
+          </div>
+        </div>
+        <ul class="list-group detail-group-flush">
+          <li class="list-group-item">{{ post?.author }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row post-buttons">
+      <button
+          type="button"
+          class="btn btn-primary"
+          routerLink="/admin/posts"
+      >
+        Zur&uuml;ck zur &Uuml;bersichtt
+      </button>
+      <button *ngIf="isEdit"
+          type="button"
+          class="btn btn-warning"
+          (click)="save()"
+          title="Save post"
+      >
+        Speichern
+      </button>
+      <button *ngIf="!isEdit"
+          type="button"
+          class="btn btn-warning"
+          (click)="save()"
+          title="Save post"
+      >
+        Speichern
+      </button>
+      <button
+          type="button"
+          class="btn btn-danger"
+          (click)="createMock()"
+          title="create mock"
+      >
+        Eintrag generieren
+      </button>
+  </div>
+</div>

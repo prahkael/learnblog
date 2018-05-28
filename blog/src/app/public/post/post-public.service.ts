@@ -14,7 +14,6 @@ import 'rxjs/add/operator/map';
 
 // *****************************************************************************
 
-import { createMockedPosts }    from './post-list.mock';
 import { Post }                 from './post';
 
 // *****************************************************************************
@@ -53,6 +52,7 @@ export class PostPublicService {
   // ***************************************************************************
 
   getPostsAsObservable() {
+    this.readPosts();
     return this._posts$.asObservable();
   }
 

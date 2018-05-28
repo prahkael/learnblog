@@ -63,7 +63,9 @@ export class PostTableListComponent implements OnInit {
     this.posts$ = this._postService.getPostsAsObservable();
 
     this._authService.isSignedIn$.subscribe(isSignedIn => {
-      this.isSignedIn = isSignedIn;
+      if (!isSignedIn) {
+        this._router.navigate(['posts']);
+      }
     });
   }
 

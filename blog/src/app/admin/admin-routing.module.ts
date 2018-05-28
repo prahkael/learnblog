@@ -19,6 +19,7 @@ const routes: Routes = [
   // Post Component
   { path: 'admin/posts',     pathMatch: 'full', component: PostTableListComponent },
   { path: 'admin/posts/:id', pathMatch: 'full', component: PostManageComponent},
+  { path: 'admin/posts/new', pathMatch: 'full', component: PostManageComponent},
 ];
 
 // *****************************************************************************

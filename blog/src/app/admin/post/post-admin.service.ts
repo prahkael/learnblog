@@ -14,7 +14,6 @@ import 'rxjs/add/operator/map';
 
 // *****************************************************************************
 
-import { createMockedPosts }    from '../../public/post/post-list.mock';
 import { Post }                 from '../../public/post/post';
 import { PostPublicService }    from '../../public/post/post-public.service';
 
