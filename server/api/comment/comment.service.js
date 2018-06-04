@@ -16,6 +16,7 @@ module.exports.updateComment         = updateComment;
 module.exports.deleteComment         = deleteComment;
 module.exports.getCommentById        = getCommentById;
 module.exports.createCommentByPostId = createCommentByPostId;
+module.exports.getAllComments        = getAllComments;
 
 // *****************************************************************************
 // Locals
@@ -24,6 +25,43 @@ module.exports.createCommentByPostId = createCommentByPostId;
 function getComment(query = {}) {
   return Comment.findOne(query);
 }
+
+function getAllComments(sortKey) {
+  return Post.find({}, 'comments').then(posts => {
+
+    const regexMinus = /^-/;
+    const direction  = sortKey.match(regexMinus) ? -1 : 1;
+    const sortKeyRaw = sortKey.replace(regexMinus, '');
+
+    return posts
+        .reduce((acc, post) => {
+          return [ ...acc, ...post.comments ];
+        }, [])
+        .sort((com1, com2) => {
+          let com1Value = com1[sortKeyRaw];
+          let com2Value = com2[sortKeyRaw];
+
+          if (typeof com1Value === 'string') {
+            com1Value = com1Value.toLowerCase();
+          }
+          if (typeof com2[sortKeyRaw] === 'string') {
+            com2Value = com2[sortKeyRaw].toLowerCase();
+          }
+
+          if (com1Value >
+              com2Value) {
+            return 1 * direction;
+          }
+          else if (com1Value <
+              com2Value) {
+            return -1 * direction;
+          }
+          return 0;
+        });
+  });
+}
+
+// *****************************************************************************
 
 
 function getCommentById(id) {
@@ -134,6 +172,7 @@ function deleteComment(id) {
 // *****************************************************************************
 
 function createCommentByPostId(_id, comment) {
+  getAllComments();
   if (!_id) {
     return Promise.reject({ kind: 'required', field: 'id',
         message: 'Post id is required but missing!' });

@@ -3,12 +3,15 @@
 // *****************************************************************************
 
 import { Component }         from '@angular/core';
+import { Input }             from '@angular/core';
 import { OnInit }            from '@angular/core';
 
 // *****************************************************************************
 
-import { ActivatedRoute }    from '@angular/router';
-import { Router }            from '@angular/router';
+import { PostAdminService }  from '../../post/post-admin.service';
+import { AuthService }       from '../../../public/auth/auth.service';
+import { Post }              from '../../../public/post/post';
+import { Comment }           from '../../../public/post/comment';
 
 // *****************************************************************************
 
@@ -17,27 +20,26 @@ import { Observable }        from 'rxjs/Observable';
 
 // *****************************************************************************
 
-import { PostAdminService }  from '../post-admin.service';
-import { AuthService }       from '../../../public/auth/auth.service';
-import { Post }              from '../../../public/post/post';
+import { ActivatedRoute }    from '@angular/router';
+import { Router }            from '@angular/router';
 
 // *****************************************************************************
 // Class
 // *****************************************************************************
 
 @Component({
-  selector     : 'app-post-table-list',
-  templateUrl  : 'post-table-list.component.html',
-  styleUrls    : ['post-table-list.component.scss'],
+  selector     : 'app-comment-table-list',
+  templateUrl  : 'comment-table-list.component.html',
+  styleUrls    : ['comment-table-list.component.scss'],
 })
-export class PostTableListComponent implements OnInit {
+export class CommentTableListComponent implements OnInit {
 
   // ***************************************************************************
   // Public properties
   // ***************************************************************************
 
+  comments$    : Observable<any>;
   sortKey      : string  = 'updatedAt';
-  posts$       : Observable<any>;
 
   // ***************************************************************************
   // Private properties
@@ -58,7 +60,7 @@ export class PostTableListComponent implements OnInit {
   // ***************************************************************************
 
   ngOnInit() {
-    this.posts$ = this._postService.getPostsAsObservable();
+    this.comments$ = this._postService.getCommentsAsObservable();
 
     this._authService.isSignedIn$.subscribe(isSignedIn => {
       if (!isSignedIn) {
@@ -69,19 +71,19 @@ export class PostTableListComponent implements OnInit {
 
   // ***************************************************************************
 
-  sort(sortKey: string) {
-    const minusKey = '-' + sortKey;
-    this.sortKey   = this.sortKey === sortKey ? minusKey : sortKey;
-    this._postService.readPosts(this.sortKey);
+  deleteComment(commentId: string) {
+    const isConfirmed = confirm('Wirklich?');
+    if (isConfirmed) {
+      this._postService.deleteComment(commentId);
+    }
   }
 
   // ***************************************************************************
 
-  deletePost(postId: string) {
-    const isConfirmed = confirm('Wirklich?');
-    if (isConfirmed) {
-      this._postService.deletePost(postId);
-    }
+  sort(sortKey: string) {
+    const minusKey = '-' + sortKey;
+    this.sortKey   = this.sortKey === sortKey ? minusKey : sortKey;
+    this._postService.readComments(this.sortKey);
   }
 
   // ***************************************************************************

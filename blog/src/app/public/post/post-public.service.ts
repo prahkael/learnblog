@@ -15,6 +15,7 @@ import 'rxjs/add/operator/map';
 // *****************************************************************************
 
 import { Post }                 from './post';
+import { Comment }              from './comment';
 
 // *****************************************************************************
 // Service
@@ -31,8 +32,10 @@ export class PostPublicService {
   // Protected properties
   // ***************************************************************************
 
-  protected _posts$: BehaviorSubject<Array<Post>>;
-  protected _posts : Array<Post>;
+  protected _posts$   : BehaviorSubject<Array<Post>>;
+  protected _posts    : Array<Post>;
+  protected _comments$: BehaviorSubject<Array<Comment>>;
+  protected _comments : Array<Comment>;
 
   // ***************************************************************************
   // Private properties
@@ -44,7 +47,8 @@ export class PostPublicService {
 
   constructor(protected _httpClient: HttpClient) {
     this.readPosts();
-    this._posts$ = new BehaviorSubject(this._posts);
+    this._posts$    = new BehaviorSubject(this._posts);
+    this._comments$ = new BehaviorSubject(this._comments);
   }
 
   // ***************************************************************************
@@ -54,6 +58,13 @@ export class PostPublicService {
   getPostsAsObservable() {
     this.readPosts();
     return this._posts$.asObservable();
+  }
+
+  // ***************************************************************************
+
+  getCommentsAsObservable() {
+    this.readComments();
+    return this._comments$.asObservable();
   }
 
   // ***************************************************************************
@@ -81,6 +92,25 @@ export class PostPublicService {
 
       this._posts = postsRaw.map(objPost => new Post(objPost));
       this._posts$.next(this._posts);
+    });
+  }
+
+  // ***************************************************************************
+
+  readComments(sortKey?: string) {
+    if (!sortKey) {
+      sortKey = 'updatedAt';
+    }
+
+    return this._httpClient
+        .get('/api/comments?sort=' + sortKey)
+        .map((result: any) => {
+          return result.data && result.data.comments;
+        })
+        .subscribe((postsRaw: Array<any>) => {
+
+      this._comments = postsRaw.map(objComment => new Comment(objComment));
+      this._comments$.next(this._comments);
     });
   }
 

@@ -25,4 +25,7 @@ const postSchema = new Schema({
   timestamps: true
 });
 
+// {comments: []}
+// sort comments.$.
+
 module.exports = mongoose.model('Post', postSchema, 'posts');

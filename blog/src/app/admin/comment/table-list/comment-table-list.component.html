@@ -1,0 +1,55 @@
+<div class="comment-table-list">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="tblist-user cp" (click)="sort('user')">
+          <span *ngIf="sortKey === '-user'"
+              class="glyphicon glyphicon-chevron-up"
+          ></span>
+          <span *ngIf="sortKey === 'user'"
+              class="glyphicon glyphicon-chevron-down"
+          ></span>
+          Author
+        </th>
+        <th class="tblist-title cp" (click)="sort('title')">
+          <span *ngIf="sortKey === '-title'"
+              class="glyphicon glyphicon-chevron-up"
+          ></span>
+          <span *ngIf="sortKey === 'title'"
+              class="glyphicon glyphicon-chevron-down"
+          ></span>
+          Title
+        </th>
+        <th class="tblist-date cp" (click)="sort('updatedAt')">
+          <span *ngIf="sortKey === '-updatedAt'"
+              class="glyphicon glyphicon-chevron-up"
+          ></span>
+          <span *ngIf="sortKey === 'updatedAt'"
+              class="glyphicon glyphicon-chevron-down"
+          ></span>
+          last edit
+        </th>
+        <th class="tblist-action text-right">actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let comment of comments$ | async">
+        <td>{{ comment.user }}</td>
+        <td>{{ comment.title }}</td>
+        <td>{{ comment.updatedAt }}</td>
+        <td class="text-right">
+          <span
+              class="glyphicon glyphicon-pencil cp"
+              aria-hidden="true"
+              routerLink="/admin/comments/{{ comment._id }}"
+          ></span>
+          <span
+              class="glyphicon glyphicon-remove cp"
+              aria-hidden="true"
+              (click)="deleteComment(comment._id)"
+          ></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -34,6 +34,14 @@
           Admin
         </a>
       </li>
+      <li *ngIf="hasAuth" class="nav-item">
+        <a class="nav-link"
+            routerLinkActive="active"
+            routerLink="/admin/comments"
+        >
+          Admin-Comments
+        </a>
+      </li>
       <li class="nav-item userAuth">
         <a class="nav-link"
           (click)="changeAuth()"

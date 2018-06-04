@@ -15,6 +15,7 @@ import 'rxjs/add/operator/map';
 // *****************************************************************************
 
 import { Post }                 from '../../public/post/post';
+import { Comment }              from '../../public/post/comment';
 import { PostPublicService }    from '../../public/post/post-public.service';
 
 // *****************************************************************************
@@ -69,6 +70,18 @@ export class PostAdminService extends PostPublicService {
           this._posts = [ ...this._posts.filter((postCurr: Post) =>
               postCurr._id !== id) ];
           this._posts$.next(this._posts);
+        });
+  }
+
+  // ***************************************************************************
+
+  deleteComment(id: string) {
+    this._httpClient
+        .delete('/api/comments/' + id)
+        .subscribe(() => {
+          this._comments = [ ...this._comments.filter((commentCurr: Comment) =>
+              commentCurr._id !== id) ];
+          this._comments$.next(this._comments);
         });
   }
 

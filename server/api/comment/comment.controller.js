@@ -36,17 +36,33 @@ function getAllComments(req, res, next) {
   let   sortObj = {};
 
   if (sortKey) {
-    sortObj = {sort: sortKey};
+    sortObj = {comments: {sort: sortKey}};
   }
-
   CommentService
-      .getAll(sortObj)
-      .then(comments => {
-        return res.status(200).json({ data: { comments } });
-      })
+      .getAllComments(sortKey)
+      .then(comments => res.status(200).json({ data: { comments } }))
       .catch(err => next(err))
       ;
 }
+
+// *****************************************************************************
+
+// function getAllComments(req, res, next) {
+//   const sortKey = req.query.sort;
+//   let   sortObj = {};
+//
+//   if (sortKey) {
+//     sortObj = {sort: sortKey};
+//   }
+//
+//   CommentService
+//       .getAll(sortObj)
+//       .then(comments => {
+//         return res.status(200).json({ data: { comments } });
+//       })
+//       .catch(err => next(err))
+//       ;
+// }
 
 // *****************************************************************************
 
@@ -104,7 +120,7 @@ function createComment(req, res, next) {
 
   const _id     = req.params.id;
   const comment = req.body.data.comment;
-  
+
   CommentService
       .createCommentByPostId(_id, comment)
       .then(post => res.status(200).json({ data: { post } }))
